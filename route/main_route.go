@@ -12,5 +12,6 @@ func MainRoute() *gin.Engine {
 	CodeRoute(r)
 	CommandRoute(r)
 	LogRoute(r)
+	ConfRoute(r)
 	return r
 }

@@ -38,7 +38,7 @@ func NgxStatus(cmdFile string, confFile string) interface{} {
 	status.Pid = NgxPid()
 	status.Running = NgxPid() != ""
 	status.Exist = FileExist(cmdFile)
-	status.Version = NgxVersion(cmdFile)
+	status.Version = NgxVersion(NgxV(cmdFile))
 	status.Check = strings.HasSuffix(NgxCheck(cmdFile, confFile), "successful\n")
 	return status
 }
@@ -66,10 +66,9 @@ func NgxPid() string {
 	return pid
 }
 
-func NgxVersion(cmdFile string) string {
-	lines := execForStr(cmdFile + " -V")
-	if strings.HasPrefix(lines, "nginx version: ") {
-		line := lines[0:strings.Index(lines, "\n")]
+func NgxVersion(ngxV string) string {
+	if strings.HasPrefix(ngxV, "nginx version: ") {
+		line := ngxV[0:strings.Index(ngxV, "\n")]
 		return line[15:]
 	}
 	return ""
