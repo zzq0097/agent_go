@@ -1,10 +1,18 @@
 package service
 
 import (
-	"os"
+	"agent/util"
 	"os/exec"
 	"strings"
 )
+
+type Status struct {
+	Pid     string `json:"pid"`
+	Running bool   `json:"running"`
+	Exist   bool   `json:"exist"`
+	Check   bool   `json:"check"`
+	Version string `json:"version"`
+}
 
 func NgxStart(cmdFile string, confFile string) string {
 	return execForStr(cmdFile + " -c " + confFile)
@@ -18,7 +26,7 @@ func NgxStop(cmdFile string) string {
 	return execForStr(cmdFile + " -s stop")
 }
 
-func NgxCheck(cmdFile string, confFile string) string {
+func NgxT(cmdFile string, confFile string) string {
 	return execForStr(cmdFile + " -t -c " + confFile)
 }
 
@@ -26,20 +34,28 @@ func NgxV(cmdFile string) string {
 	return execForStr(cmdFile + " -V")
 }
 
-func NgxStatus(cmdFile string, confFile string) interface{} {
-	type Status struct {
-		Pid     string `json:"pid"`
-		Running bool   `json:"running"`
-		Exist   bool   `json:"exist"`
-		Check   bool   `json:"check"`
-		Version string `json:"version"`
+func NgxCheck(ngxT string) bool {
+	return strings.HasSuffix(ngxT, "successful\n")
+}
+
+func NgxVersion(ngxV string) string {
+	if strings.HasPrefix(ngxV, "nginx version: ") {
+		return ngxV[0:strings.Index(ngxV, "\n")][15:]
 	}
+	return ""
+}
+
+func NgxExist(cmdFile string) bool {
+	return util.FileExist(cmdFile)
+}
+
+func NgxStatus(cmdFile string, confFile string) interface{} {
 	status := Status{}
 	status.Pid = NgxPid()
 	status.Running = NgxPid() != ""
-	status.Exist = FileExist(cmdFile)
+	status.Exist = NgxExist(cmdFile)
 	status.Version = NgxVersion(NgxV(cmdFile))
-	status.Check = strings.HasSuffix(NgxCheck(cmdFile, confFile), "successful\n")
+	status.Check = NgxCheck(NgxT(cmdFile, confFile))
 	return status
 }
 
@@ -66,29 +82,10 @@ func NgxPid() string {
 	return pid
 }
 
-func NgxVersion(ngxV string) string {
-	if strings.HasPrefix(ngxV, "nginx version: ") {
-		line := ngxV[0:strings.Index(ngxV, "\n")]
-		return line[15:]
-	}
-	return ""
-}
-
 func execForStr(command string) string {
 	output, err := exec.Command("/bin/sh", "-c", command).CombinedOutput()
 	if err != nil {
 		return "error"
 	}
 	return string(output)
-}
-
-func FileExist(fullPath string) bool {
-	_, err := os.Stat(fullPath)
-	if err == nil {
-		return true
-	}
-	if os.IsNotExist(err) {
-		return false
-	}
-	return false
 }
