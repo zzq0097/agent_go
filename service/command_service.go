@@ -2,6 +2,7 @@ package service
 
 import (
 	"agent/util"
+	"fmt"
 	"os/exec"
 	"strings"
 )
@@ -12,22 +13,35 @@ type Status struct {
 	Exist   bool   `json:"exist"`
 	Check   bool   `json:"check"`
 	Version string `json:"version"`
+	ExecMsg string `json:"execMsg"`
 }
 
-func NgxStart(cmdFile string, confFile string) string {
+func start(cmdFile string, confFile string) string {
 	return execForStr(cmdFile + " -c " + confFile)
 }
 
-func NgxReload(cmdFile string, confFile string) string {
+func reload(cmdFile string, confFile string) string {
 	return execForStr(cmdFile + " -s reload -c " + confFile)
 }
 
-func NgxStop(cmdFile string) string {
+func stop(cmdFile string) string {
 	return execForStr(cmdFile + " -s stop")
 }
 
-func NgxT(cmdFile string, confFile string) string {
+func check(cmdFile string, confFile string) string {
 	return execForStr(cmdFile + " -t -c " + confFile)
+}
+
+func NgxStart(cmdFile string, confFile string) *Status {
+	return NgxStatus(cmdFile, confFile, start(cmdFile, confFile))
+}
+
+func NgxReload(cmdFile string, confFile string) *Status {
+	return NgxStatus(cmdFile, confFile, reload(cmdFile, confFile))
+}
+
+func NgxStop(cmdFile string, confFile string) *Status {
+	return NgxStatus(cmdFile, confFile, stop(cmdFile))
 }
 
 func NgxV(cmdFile string) string {
@@ -49,14 +63,25 @@ func NgxExist(cmdFile string) bool {
 	return util.FileExist(cmdFile)
 }
 
-func NgxStatus(cmdFile string, confFile string) interface{} {
-	status := Status{}
-	status.Pid = NgxPid()
-	status.Running = NgxPid() != ""
-	status.Exist = NgxExist(cmdFile)
-	status.Version = NgxVersion(NgxV(cmdFile))
-	status.Check = NgxCheck(NgxT(cmdFile, confFile))
-	return status
+// NgxStatus execMsgs只会获取第一个参数
+func NgxStatus(cmdFile string, confFile string, execMsgs ...string) *Status {
+	pid := NgxPid()
+	checkMsg := check(cmdFile, confFile)
+	fmt.Println(len(execMsgs))
+	var execMsg string
+	if len(execMsgs) == 1 {
+		execMsg = execMsgs[0]
+	} else {
+		execMsg = checkMsg
+	}
+	return &Status{
+		Pid:     pid,
+		Running: pid != "",
+		Exist:   NgxExist(cmdFile),
+		Version: NgxVersion(NgxV(cmdFile)),
+		Check:   NgxCheck(checkMsg),
+		ExecMsg: execMsg,
+	}
 }
 
 func NgxPid() string {
@@ -85,7 +110,7 @@ func NgxPid() string {
 func execForStr(command string) string {
 	output, err := exec.Command("/bin/sh", "-c", command).CombinedOutput()
 	if err != nil {
-		return "error"
+		return err.Error()
 	}
 	return string(output)
 }
