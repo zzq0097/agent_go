@@ -2,7 +2,6 @@ package service
 
 import (
 	"agent/util"
-	"fmt"
 	"os/exec"
 	"strings"
 )
@@ -63,14 +62,13 @@ func NgxExist(cmdFile string) bool {
 	return util.FileExist(cmdFile)
 }
 
-// NgxStatus execMsgs只会获取第一个参数
-func NgxStatus(cmdFile string, confFile string, execMsgs ...string) *Status {
+// NgxStatus args 只会获取第一个参数
+func NgxStatus(cmdFile string, confFile string, args ...string) *Status {
 	pid := NgxPid()
 	checkMsg := check(cmdFile, confFile)
-	fmt.Println(len(execMsgs))
 	var execMsg string
-	if len(execMsgs) == 1 {
-		execMsg = execMsgs[0]
+	if len(args) == 1 {
+		execMsg = args[0]
 	} else {
 		execMsg = checkMsg
 	}
