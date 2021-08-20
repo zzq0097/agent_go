@@ -2,6 +2,9 @@ package service
 
 import (
 	"agent/util"
+	"bufio"
+	"fmt"
+	"io"
 	"os/exec"
 	"strings"
 )
@@ -58,6 +61,13 @@ func NgxVersion(ngxV string) string {
 	return ""
 }
 
+func NgxCfgArgs(ngxV string) string {
+	if strings.Contains(ngxV, "configure arguments: ") {
+		return strings.TrimRight(ngxV[strings.Index(ngxV, "configure arguments: ")+21:], "\n")
+	}
+	return ""
+}
+
 func NgxExist(cmdFile string) bool {
 	return util.FileExist(cmdFile)
 }
@@ -106,9 +116,53 @@ func NgxPid() string {
 }
 
 func execForStr(command string) string {
-	output, err := exec.Command("/bin/sh", "-c", command).CombinedOutput()
+	fmt.Println("[" + command + "]\n")
+	var msg string
+	cmd := exec.Command("/bin/sh", "-c", command)
+
+	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		return err.Error()
 	}
-	return string(output)
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return err.Error()
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return err.Error()
+	}
+
+	buf := 128
+	reader := bufio.NewReader(stdout)
+	for {
+		byt := make([]byte, buf)
+		i, err := reader.Read(byt)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return err.Error()
+		}
+		msg += string(byt[0:i])
+	}
+
+	reader = bufio.NewReader(stderr)
+	for {
+		byt := make([]byte, buf)
+		i, err := reader.Read(byt)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return err.Error()
+		}
+		msg += string(byt[0:i])
+	}
+
+	_ = cmd.Wait()
+	fmt.Println(msg)
+	return msg
 }

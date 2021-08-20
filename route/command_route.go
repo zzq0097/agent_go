@@ -18,16 +18,19 @@ func CommandRoute(r *gin.Engine) {
 			c.JSON(http.StatusOK, resp.SuccessData(service.NgxStart(consts.NgxDefCmdFile, consts.NgxDefConfFile)))
 		})
 		command.GET("/stop", func(c *gin.Context) {
-			c.JSON(http.StatusOK, resp.SuccessData(service.NgxStop(consts.NgxDefCmdFile, consts.NgxDefCmdFile)))
+			c.JSON(http.StatusOK, resp.SuccessData(service.NgxStop(consts.NgxDefCmdFile, consts.NgxDefConfFile)))
 		})
 		command.GET("/reload", func(c *gin.Context) {
 			c.JSON(http.StatusOK, resp.SuccessData(service.NgxReload(consts.NgxDefCmdFile, consts.NgxDefConfFile)))
 		})
+		command.GET("/ngxV", func(c *gin.Context) {
+			c.JSON(http.StatusOK, resp.SuccessData(service.NgxV(consts.NgxDefCmdFile)))
+		})
 		command.GET("/version", func(c *gin.Context) {
 			c.JSON(http.StatusOK, resp.SuccessData(service.NgxVersion(service.NgxV(consts.NgxDefCmdFile))))
 		})
-		command.GET("/ngxV", func(c *gin.Context) {
-			c.JSON(http.StatusOK, resp.SuccessData(service.NgxV(consts.NgxDefCmdFile)))
+		command.GET("/cfgArgs", func(c *gin.Context) {
+			c.JSON(http.StatusOK, resp.SuccessData(service.NgxCfgArgs(service.NgxV(consts.NgxDefCmdFile))))
 		})
 	}
 }
