@@ -1,5 +1,10 @@
 package resp
 
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
 type R struct {
 	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
@@ -9,18 +14,22 @@ type R struct {
 const OK = 0
 const ERROR = 1
 
-func Success() R {
-	return R{OK, "success", nil}
+func Result(r *R, c *gin.Context) {
+	c.JSON(http.StatusOK, r)
 }
 
-func SuccessData(data interface{}) R {
-	return R{OK, "success", data}
+func Success(c *gin.Context) {
+	Result(&R{OK, "success", nil}, c)
 }
 
-func Error() R {
-	return R{ERROR, "error", nil}
+func SuccessData(data interface{}, c *gin.Context) {
+	Result(&R{OK, "success", data}, c)
 }
 
-func ErrorMsg(msg string) R {
-	return R{ERROR, msg, nil}
+func Error(c *gin.Context) {
+	Result(&R{ERROR, "error", nil}, c)
+}
+
+func ErrorMsg(msg string, c *gin.Context) {
+	Result(&R{ERROR, msg, nil}, c)
 }
