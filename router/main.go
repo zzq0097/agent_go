@@ -1,18 +1,18 @@
-package route
+package router
 
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func MainRoute() *gin.Engine {
+func MainRouter() *gin.Engine {
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "Running")
 	})
-	CodeRoute(r)
-	CommandRoute(r)
-	LogRoute(r)
-	ConfRoute(r)
+	CodeRouter(r)
+	CommandRouter(r)
+	LogRouter(r)
+	ConfRouter(r)
 	return r
 }

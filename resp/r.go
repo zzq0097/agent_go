@@ -11,8 +11,10 @@ type R struct {
 	Data interface{} `json:"data"`
 }
 
-const OK = 0
-const ERROR = 1
+const (
+	OK    = 0
+	ERROR = 1
+)
 
 func Result(r *R, c *gin.Context) {
 	c.JSON(http.StatusOK, r)

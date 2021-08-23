@@ -1,10 +1,10 @@
 package main
 
 import (
-	"agent/route"
+	"agent/router"
 )
 
 func main() {
-	r := route.MainRoute()
+	r := router.MainRouter()
 	r.Run(":8877")
 }

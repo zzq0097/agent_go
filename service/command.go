@@ -15,6 +15,7 @@ type Status struct {
 	Exist   bool   `json:"exist"`
 	Check   bool   `json:"check"`
 	Version string `json:"version"`
+	CfgArgs string `json:"cfgArgs"`
 	ExecMsg string `json:"execMsg"`
 }
 
@@ -76,6 +77,7 @@ func NgxExist(cmdFile string) bool {
 func NgxStatus(cmdFile string, confFile string, args ...string) *Status {
 	pid := NgxPid()
 	checkMsg := check(cmdFile, confFile)
+	ngxV := NgxV(cmdFile)
 	var execMsg string
 	if len(args) == 1 {
 		execMsg = args[0]
@@ -86,7 +88,8 @@ func NgxStatus(cmdFile string, confFile string, args ...string) *Status {
 		Pid:     pid,
 		Running: pid != "",
 		Exist:   NgxExist(cmdFile),
-		Version: NgxVersion(NgxV(cmdFile)),
+		Version: NgxVersion(ngxV),
+		CfgArgs: NgxCfgArgs(ngxV),
 		Check:   NgxCheck(checkMsg),
 		ExecMsg: execMsg,
 	}
