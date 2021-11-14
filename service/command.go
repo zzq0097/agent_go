@@ -19,6 +19,11 @@ type Status struct {
 	ExecMsg string `json:"execMsg"`
 }
 
+type ConfFile struct {
+	Name    string `json:"name"`
+	Content string `json:"content"`
+}
+
 func start(cmdFile string, confFile string) string {
 	return execForStr(cmdFile + " -c " + confFile)
 }
@@ -33,6 +38,10 @@ func stop(cmdFile string) string {
 
 func check(cmdFile string, confFile string) string {
 	return execForStr(cmdFile + " -t -c " + confFile)
+}
+
+func ngxT(cmdFile string, confFile string) string {
+	return execForStr(cmdFile + " -T -c " + confFile)
 }
 
 func NgxStart(cmdFile string, confFile string) *Status {
@@ -67,6 +76,25 @@ func NgxCfgArgs(ngxV string) string {
 		return strings.TrimRight(ngxV[strings.Index(ngxV, "configure arguments: ")+21:], "\n")
 	}
 	return ""
+}
+
+func NgxTConf(cmdFile string, confFile string) []ConfFile {
+	var confFiles []ConfFile
+	var content string
+	var name string
+	lines := strings.Split(ngxT(cmdFile, confFile), "\n")
+	for i := range lines {
+		if strings.HasPrefix(lines[i], "#") {
+			if name != "" {
+				confFiles = append(confFiles, ConfFile{name, content})
+			}
+			name = strings.TrimRight(lines[i][21:], ":")
+			content = ""
+		} else {
+			content += lines[i] + "\n"
+		}
+	}
+	return confFiles
 }
 
 func NgxExist(cmdFile string) bool {

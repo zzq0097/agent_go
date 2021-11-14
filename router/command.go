@@ -15,5 +15,6 @@ func CommandRouter(r *gin.Engine) {
 		command.GET("/ngxV", api.NgxV)
 		command.GET("/version", api.NgxVersion)
 		command.GET("/cfgArgs", api.NgxCfgArgs)
+		command.GET("/ngxTConf", api.NgxTConf)
 	}
 }

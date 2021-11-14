@@ -12,26 +12,26 @@ type R struct {
 }
 
 const (
-	OK    = 0
-	ERROR = 1
+	OK   = 0
+	FAIL = 1
 )
 
 func Result(r *R, c *gin.Context) {
 	c.JSON(http.StatusOK, r)
 }
 
-func Success(c *gin.Context) {
+func Ok(c *gin.Context) {
 	Result(&R{OK, "success", nil}, c)
 }
 
-func SuccessData(data interface{}, c *gin.Context) {
+func OkData(data interface{}, c *gin.Context) {
 	Result(&R{OK, "success", data}, c)
 }
 
-func Error(c *gin.Context) {
-	Result(&R{ERROR, "error", nil}, c)
+func Fail(c *gin.Context) {
+	Result(&R{FAIL, "error", nil}, c)
 }
 
-func ErrorMsg(msg string, c *gin.Context) {
-	Result(&R{ERROR, msg, nil}, c)
+func FailMsg(msg string, c *gin.Context) {
+	Result(&R{FAIL, msg, nil}, c)
 }
