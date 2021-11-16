@@ -42,3 +42,7 @@ func NgxCfgArgs(c *gin.Context) {
 func NgxTConf(c *gin.Context) {
 	resp.OkData(service.NgxTConf(consts.NgxDefCmdFile, consts.NgxDefConfFile), c)
 }
+
+func CheckPortUsed(c *gin.Context) {
+	resp.OkData(service.CheckPortUsed(), c)
+}

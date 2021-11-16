@@ -25,23 +25,23 @@ type ConfFile struct {
 }
 
 func start(cmdFile string, confFile string) string {
-	return execForStr(cmdFile + " -c " + confFile)
+	return ExecForStr(cmdFile + " -c " + confFile)
 }
 
 func reload(cmdFile string, confFile string) string {
-	return execForStr(cmdFile + " -s reload -c " + confFile)
+	return ExecForStr(cmdFile + " -s reload -c " + confFile)
 }
 
 func stop(cmdFile string) string {
-	return execForStr(cmdFile + " -s stop")
+	return ExecForStr(cmdFile + " -s stop")
 }
 
 func check(cmdFile string, confFile string) string {
-	return execForStr(cmdFile + " -t -c " + confFile)
+	return ExecForStr(cmdFile + " -t -c " + confFile)
 }
 
 func ngxT(cmdFile string, confFile string) string {
-	return execForStr(cmdFile + " -T -c " + confFile)
+	return ExecForStr(cmdFile + " -T -c " + confFile)
 }
 
 func NgxStart(cmdFile string, confFile string) *Status {
@@ -57,7 +57,7 @@ func NgxStop(cmdFile string, confFile string) *Status {
 }
 
 func NgxV(cmdFile string) string {
-	return execForStr(cmdFile + " -V")
+	return ExecForStr(cmdFile + " -V")
 }
 
 func NgxCheck(ngxT string) bool {
@@ -125,7 +125,7 @@ func NgxStatus(cmdFile string, confFile string, args ...string) *Status {
 
 func NgxPid() string {
 	pid := ""
-	pidLines := execForStr("ps -ef|grep nginx")
+	pidLines := ExecForStr("ps -ef|grep nginx")
 	for _, pidLine := range strings.Split(pidLines, "\n") {
 		if strings.Contains(pidLine, "nginx: master process") {
 			first := true
@@ -146,7 +146,7 @@ func NgxPid() string {
 	return pid
 }
 
-func execForStr(command string) string {
+func ExecForStr(command string) string {
 	fmt.Println("[" + command + "]\n")
 	var msg string
 	cmd := exec.Command("/bin/sh", "-c", command)
