@@ -12,8 +12,8 @@ type R struct {
 }
 
 const (
-	OK   = 0
-	FAIL = 1
+	SUCCESS = 0
+	ERROR   = 1
 )
 
 func Result(r *R, c *gin.Context) {
@@ -21,17 +21,17 @@ func Result(r *R, c *gin.Context) {
 }
 
 func Ok(c *gin.Context) {
-	Result(&R{OK, "success", nil}, c)
+	Result(&R{SUCCESS, "success", nil}, c)
 }
 
 func OkData(data interface{}, c *gin.Context) {
-	Result(&R{OK, "success", data}, c)
+	Result(&R{SUCCESS, "success", data}, c)
 }
 
 func Fail(c *gin.Context) {
-	Result(&R{FAIL, "error", nil}, c)
+	Result(&R{ERROR, "error", nil}, c)
 }
 
 func FailMsg(msg string, c *gin.Context) {
-	Result(&R{FAIL, msg, nil}, c)
+	Result(&R{ERROR, msg, nil}, c)
 }
