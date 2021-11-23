@@ -1,24 +1,23 @@
 package api
 
 import (
-	"agent/consts"
 	"agent/resp"
 	"agent/service"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
-func AccessLog(c *gin.Context) {
-	logs, err := service.ReadLogs(consts.NgxRpmAccessLog, 10)
+func LogLines(c *gin.Context) {
+	log := c.Query("log")
+	line, err := strconv.Atoi(c.Query("line"))
 	if err != nil {
-		resp.FailMsg(err.Error(), c)
+		line = 10
 	}
-	resp.OkData(logs, c)
-}
 
-func ErrorLog(c *gin.Context) {
-	logs, err := service.ReadLogs(consts.NgxDefErrorLog, 10)
+	logs, err := service.ReadLogs(log, line)
 	if err != nil {
 		resp.FailMsg(err.Error(), c)
+		return
 	}
 	resp.OkData(logs, c)
 }

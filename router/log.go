@@ -8,7 +8,6 @@ import (
 func LogRouter(r *gin.Engine) {
 	log := r.Group("/log")
 	{
-		log.GET("/accessLog", api.AccessLog)
-		log.GET("/errorLog", api.ErrorLog)
+		log.GET("/logLines", api.LogLines)
 	}
 }

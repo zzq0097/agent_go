@@ -41,6 +41,12 @@ func ReadLogs(path string, line int) ([]string, error) {
 		if l >= line {
 			break
 		}
+		if pos == 0 {
+			byt = make([]byte, lastLine-1)
+			_, err = file.ReadAt(byt, 0)
+			arr = append(arr, string(byt))
+			break
+		}
 		byt := make([]byte, 1)
 		_, _ = file.ReadAt(byt, pos-1)
 		if byt[0] == nl {
