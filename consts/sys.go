@@ -9,8 +9,8 @@ const (
 	NgxDefCmdFile   = NgxDefCmd + "/nginx"
 	NgxDefConf      = NgxDefRoot + "/conf"
 	NgxDefConfFile  = NgxDefConf + "/nginx.conf"
-	NgxDefAccessLog = "/usr/local/nginx/logs/access.log"
-	NgxDefErrorLog  = "/usr/local/nginx/logs/error.log"
+	NgxDefAccessLog = NgxDefRoot + "/logs/access.log"
+	NgxDefErrorLog  = NgxDefRoot + "/logs/error.log"
 
 	NgxRpmRoot      = "/etc/nginx"
 	NgxRpmCmdFile   = "/usr/sbin/nginx"
