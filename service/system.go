@@ -1,6 +1,7 @@
 package service
 
 import (
+	"runtime"
 	"strconv"
 	"strings"
 )
@@ -47,4 +48,12 @@ func CheckPortUsed() []PortUsed {
 		arr = append(arr, portUsed)
 	}
 	return arr
+}
+
+func Os() string {
+	os := runtime.GOOS
+	if os == "linux" {
+
+	}
+	return os
 }

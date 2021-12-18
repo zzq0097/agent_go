@@ -46,3 +46,7 @@ func NgxTConf(c *gin.Context) {
 func CheckPortUsed(c *gin.Context) {
 	resp.OkData(service.CheckPortUsed(), c)
 }
+
+func Os(c *gin.Context) {
+	resp.OkData(service.Os(), c)
+}
