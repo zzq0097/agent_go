@@ -1,7 +1,11 @@
 package service
 
 import (
+	"agent/model"
+	"bufio"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"runtime"
 )
@@ -59,4 +63,39 @@ func ReadLogs(path string, line int) ([]string, error) {
 		pos--
 	}
 	return arr, nil
+}
+
+func ReadOffset(path string, offset int64, handler func(line string)) {
+	file, err := os.Open(path)
+	if err != nil {
+		return
+	}
+	stat, err := file.Stat()
+	if err != nil {
+		return
+	}
+
+	size := stat.Size()
+	pos := offset
+	if size != 0 && pos < size {
+		_, err = file.Seek(pos, 0)
+		if err != nil {
+			return
+		}
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := scanner.Text()
+			handler(line)
+		}
+	}
+}
+
+func LogLine(line string) {
+	var log model.AccessLog
+	err := json.Unmarshal([]byte(line), &log)
+	if err != nil {
+		return
+	}
+	fmt.Println(log)
+	// TODO
 }

@@ -65,15 +65,17 @@ func NgxCheck(ngxT string) bool {
 }
 
 func NgxVersion(ngxV string) string {
-	if strings.HasPrefix(ngxV, "nginx version: ") {
-		return ngxV[0:strings.Index(ngxV, "\n")][15:]
+	flag := "nginx version: "
+	if strings.HasPrefix(ngxV, flag) {
+		return ngxV[0:strings.Index(ngxV, "\n")][len(flag):]
 	}
 	return ""
 }
 
 func NgxCfgArgs(ngxV string) string {
-	if strings.Contains(ngxV, "configure arguments: ") {
-		return strings.TrimRight(ngxV[strings.Index(ngxV, "configure arguments: ")+21:], "\n")
+	flag := "configure arguments: "
+	if strings.Contains(ngxV, flag) {
+		return strings.TrimRight(ngxV[strings.Index(ngxV, flag)+len(flag):], "\n")
 	}
 	return ""
 }
