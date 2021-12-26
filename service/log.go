@@ -5,12 +5,12 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 	"runtime"
+	"strconv"
 )
 
-func ReadLogs(path string, line int) ([]string, error) {
+func ReadReverse(path string, line int) ([]string, error) {
 	var nl byte
 	switch runtime.GOOS {
 	case "linux":
@@ -65,7 +65,7 @@ func ReadLogs(path string, line int) ([]string, error) {
 	return arr, nil
 }
 
-func ReadOffset(path string, offset int64, handler func(line string)) {
+func ReadOffset(path string, offset int64, sectionLog *model.SectionLog) {
 	file, err := os.Open(path)
 	if err != nil {
 		return
@@ -85,17 +85,38 @@ func ReadOffset(path string, offset int64, handler func(line string)) {
 		scanner := bufio.NewScanner(file)
 		for scanner.Scan() {
 			line := scanner.Text()
-			handler(line)
+			LogLine(line, sectionLog)
 		}
 	}
 }
 
-func LogLine(line string) {
-	var log model.AccessLog
-	err := json.Unmarshal([]byte(line), &log)
-	if err != nil {
+func LogLine(line string, sectionLog *model.SectionLog) {
+	log := model.AccessLog{}
+	if err := json.Unmarshal([]byte(line), &log); err != nil {
 		return
 	}
-	fmt.Println(log)
-	// TODO
+
+	if reqLen, err := strconv.Atoi(log.RequestLength); err == nil {
+		sectionLog.ReqLen += reqLen
+	}
+
+	if reqTime, err := strconv.ParseFloat(log.RequestTime, 32); err == nil {
+		sectionLog.ReqTime += reqTime
+	}
+	if upsRespTime, err := strconv.ParseFloat(log.UpstreamResponseTime, 32); err == nil {
+		sectionLog.UpsRespTime += upsRespTime
+	}
+
+	code := log.Status
+	if _, ok := sectionLog.Code[code]; ok {
+		sectionLog.Code[code]++
+	} else {
+		sectionLog.Code[code] = 1
+	}
+	upsCode := log.UpstreamStatus
+	if _, ok := sectionLog.UpsCode[upsCode]; ok {
+		sectionLog.UpsCode[upsCode]++
+	} else {
+		sectionLog.UpsCode[upsCode] = 1
+	}
 }

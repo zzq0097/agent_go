@@ -14,7 +14,7 @@ func LogLines(c *gin.Context) {
 		line = 10
 	}
 
-	logs, err := service.ReadLogs(log, line)
+	logs, err := service.ReadReverse(log, line)
 	if err != nil {
 		resp.FailMsg(err.Error(), c)
 		return

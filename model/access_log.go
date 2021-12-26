@@ -18,3 +18,19 @@ type AccessLog struct {
 	BodyBytesDent        string `json:"bodyBytesDent"`
 	UpstreamStatus       string `json:"upstreamStatus"`
 }
+
+// SectionLog
+//  {
+//		"code": {},
+//		"upsCode": {},
+//		"reqLen": 0,
+//		"reqTime": 0,
+//		"upsRespTime": 0
+//	}
+type SectionLog struct {
+	Code        map[string]int `json:"code"`
+	UpsCode     map[string]int `json:"upsCode"`
+	ReqLen      int            `json:"reqLen"`
+	ReqTime     float64        `json:"reqTime"`
+	UpsRespTime float64        `json:"upsRespTime"`
+}
