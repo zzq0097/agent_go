@@ -14,5 +14,6 @@ func MainRouter() *gin.Engine {
 	CommandRouter(r)
 	LogRouter(r)
 	ConfRouter(r)
+	ParameterRouter(r)
 	return r
 }

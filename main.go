@@ -1,13 +1,15 @@
 package main
 
 import (
-	"agent/init"
+	"agent/config"
 	"agent/router"
+	"agent/util"
 	"fmt"
 )
 
 func main() {
-	init.Init()
+	util.InitDB()
+	config.Init()
 
 	r := router.MainRouter()
 	err := r.Run(":10700")

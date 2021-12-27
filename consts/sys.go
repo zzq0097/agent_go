@@ -4,9 +4,12 @@ const (
 	Root   = "/opt/agent"
 	DBFile = Root + "/db/sqlite.db"
 
+	BinName  = "bin_file"
+	ConfName = "conf_file"
+
 	NgxDefRoot      = "/usr/local/nginx/"
 	NgxDefCmd       = NgxDefRoot + "sbin/"
-	NgxDefCmdFile   = NgxDefCmd + "nginx/"
+	NgxDefCmdFile   = NgxDefCmd + "nginx"
 	NgxDefConf      = NgxDefRoot + "conf/"
 	NgxDefConfD     = NgxDefConf + "conf.d/"
 	NgxDefConfFile  = NgxDefConf + "nginx.conf"

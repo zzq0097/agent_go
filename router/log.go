@@ -8,6 +8,6 @@ import (
 func LogRouter(r *gin.Engine) {
 	log := r.Group("/log")
 	{
-		log.GET("/logLines", api.LogLines)
+		log.GET("/ReverseLines", api.LogLines)
 	}
 }

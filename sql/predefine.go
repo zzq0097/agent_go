@@ -3,7 +3,7 @@ package sql
 const (
 	CreateParameterTable = `
 	CREATE TABLE IF NOT EXISTS parameter (
-		name text,
+		name text NOT NULL UNIQUE,
 		value text
 	)
 	`
