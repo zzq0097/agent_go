@@ -3,13 +3,22 @@ package config
 import (
 	"agent/consts"
 	"agent/dao"
+	"agent/sql"
 	"agent/util"
-	"fmt"
+	"os"
+	"strconv"
 )
 
 func Init() {
-	dao.CreateTable()
+	CheckTable()
 	ScanNgx()
+	CheckParameter()
+}
+
+func CheckTable() {
+	_, _ = util.DB.Exec(sql.CreateParameterTable)
+	_, _ = util.DB.Exec(sql.CreateNgxCodeTable)
+	_, _ = util.DB.Exec(sql.CreateNgxStatusTable)
 }
 
 func ScanNgx() {
@@ -19,12 +28,17 @@ func ScanNgx() {
 	}
 	if value, err := dao.GetParameter(consts.BinName); err != nil || value == "" {
 		for bin, conf := range files {
-			fmt.Println(bin)
 			if util.FileExist(bin) {
-				dao.SetParameter(consts.BinName, bin)
-				dao.SetParameter(consts.ConfName, conf)
+				dao.SaveOrUpdateParameter(consts.BinName, bin)
+				dao.SaveOrUpdateParameter(consts.ConfName, conf)
 				break
 			}
 		}
+	}
+}
+
+func CheckParameter() {
+	if stat, err := os.Stat(consts.NgxRpmAccessLog); err == nil {
+		dao.SaveOrIgnoreParameter(consts.AccessLogOffset, strconv.FormatInt(stat.Size(), 10))
 	}
 }
