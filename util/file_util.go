@@ -12,3 +12,11 @@ func FileExist(fullPath string) bool {
 	}
 	return false
 }
+
+func FileSize(fullPath string) int64 {
+	stat, err := os.Stat(fullPath)
+	if err != nil {
+		return 0
+	}
+	return stat.Size()
+}

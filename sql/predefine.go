@@ -16,8 +16,8 @@ const (
 	)
 	`
 
-	CreateNgxCodeTable = `
-	CREATE TABLE IF NOT EXISTS ngx_code (
+	CreateNgxLogTable = `
+	CREATE TABLE IF NOT EXISTS ngx_log (
 		time text,
 		json text
 	)

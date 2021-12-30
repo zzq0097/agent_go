@@ -17,7 +17,7 @@ func Init() {
 
 func CheckTable() {
 	_, _ = util.DB.Exec(sql.CreateParameterTable)
-	_, _ = util.DB.Exec(sql.CreateNgxCodeTable)
+	_, _ = util.DB.Exec(sql.CreateNgxLogTable)
 	_, _ = util.DB.Exec(sql.CreateNgxStatusTable)
 }
 

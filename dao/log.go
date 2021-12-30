@@ -2,36 +2,31 @@ package dao
 
 import (
 	"agent/consts"
-	"agent/model"
-	"agent/service"
 	"agent/util"
-	"encoding/json"
+	"fmt"
 	"strconv"
 )
 
 func GetLogOffset() (int64, error) {
-	query, err := util.DB.Query("select `value` from `parameter` where `name` = ?", consts.AccessLogOffset)
-	if err != nil {
-		return 0, err
-	}
+	row := util.DB.QueryRow("select `value` from `parameter` where `name` = ?", consts.AccessLogOffset)
 	var offset string
-	err = query.Scan(offset)
+	err := row.Scan(&offset)
 	if err != nil {
 		return 0, err
 	}
 	return strconv.ParseInt(offset, 10, 64)
 }
 
-func InsertSectionLog() {
-	offset, err := GetLogOffset()
-	if err != nil {
-		return
+func InsertSectionLog(json string) int64 {
+	fmt.Println(json)
+	if result, err := util.DB.Exec("insert into ngx_log values (?,?)", util.Now(), json); err == nil {
+		if affected, err := result.RowsAffected(); err == nil {
+			return affected
+		} else {
+			fmt.Println(err)
+		}
+	} else {
+		fmt.Println(err)
 	}
-	sectionLog := model.SectionLog{}
-	service.ReadOffset(consts.NgxRpmAccessLog, offset, &sectionLog)
-	marshal, err := json.Marshal(sectionLog)
-	if err != nil {
-		return
-	}
-	_, _ = util.DB.Exec("insert into ngx_log values (?,?)", util.Now(), string(marshal))
+	return 0
 }

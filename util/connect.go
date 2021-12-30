@@ -25,4 +25,5 @@ func InitDB() {
 		return
 	}
 	DB = db
+	fmt.Println(dbFile)
 }

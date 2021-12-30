@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"runtime"
 	"strconv"
@@ -22,6 +23,7 @@ func ReadReverse(path string, line int) ([]string, error) {
 	}
 
 	file, err := os.Open(path)
+	defer file.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -67,6 +69,7 @@ func ReadReverse(path string, line int) ([]string, error) {
 
 func ReadOffset(path string, offset int64, sectionLog *model.SectionLog) {
 	file, err := os.Open(path)
+	defer file.Close()
 	if err != nil {
 		return
 	}
@@ -80,6 +83,7 @@ func ReadOffset(path string, offset int64, sectionLog *model.SectionLog) {
 	if size != 0 && pos < size {
 		_, err = file.Seek(pos, 0)
 		if err != nil {
+			fmt.Println(err)
 			return
 		}
 		scanner := bufio.NewScanner(file)
@@ -111,12 +115,14 @@ func LogLine(line string, sectionLog *model.SectionLog) {
 	if _, ok := sectionLog.Code[code]; ok {
 		sectionLog.Code[code]++
 	} else {
+		sectionLog.Code = make(map[string]int)
 		sectionLog.Code[code] = 1
 	}
 	upsCode := log.UpstreamStatus
 	if _, ok := sectionLog.UpsCode[upsCode]; ok {
 		sectionLog.UpsCode[upsCode]++
 	} else {
+		sectionLog.UpsCode = make(map[string]int)
 		sectionLog.UpsCode[upsCode] = 1
 	}
 }
