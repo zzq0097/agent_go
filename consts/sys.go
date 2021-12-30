@@ -26,4 +26,6 @@ const (
 	NgxRpmLog       = "/var/log/nginx/"
 	NgxRpmAccessLog = NgxRpmLog + "access.log"
 	NgxRpmErrorLog  = NgxRpmLog + "error.log"
+
+	MaxInt64Str = "9223372036854775807"
 )

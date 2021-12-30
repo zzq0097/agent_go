@@ -38,7 +38,11 @@ func ScanNgx() {
 }
 
 func CheckParameter() {
+	var size string
 	if stat, err := os.Stat(consts.NgxRpmAccessLog); err == nil {
-		dao.SaveOrIgnoreParameter(consts.AccessLogOffset, strconv.FormatInt(stat.Size(), 10))
+		size = strconv.FormatInt(stat.Size(), 10)
+	} else {
+		size = consts.MaxInt64Str
 	}
+	dao.SaveOrIgnoreParameter(consts.AccessLogOffset, size)
 }
