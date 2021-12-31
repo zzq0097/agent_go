@@ -3,7 +3,6 @@ package dao
 import (
 	"agent/consts"
 	"agent/util"
-	"fmt"
 	"strconv"
 )
 
@@ -17,16 +16,11 @@ func GetLogOffset() (int64, error) {
 	return strconv.ParseInt(offset, 10, 64)
 }
 
-func InsertSectionLog(json string) int64 {
-	fmt.Println(json)
-	if result, err := util.DB.Exec("insert into ngx_log values (?,?)", util.Now(), json); err == nil {
+func InsertSectionLog(jsonStr string) int64 {
+	if result, err := util.DB.Exec("insert into ngx_log values (?,?)", util.Now(), jsonStr); err == nil {
 		if affected, err := result.RowsAffected(); err == nil {
 			return affected
-		} else {
-			fmt.Println(err)
 		}
-	} else {
-		fmt.Println(err)
 	}
 	return 0
 }

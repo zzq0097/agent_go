@@ -27,5 +27,12 @@ const (
 	NgxRpmAccessLog = NgxRpmLog + "access.log"
 	NgxRpmErrorLog  = NgxRpmLog + "error.log"
 
+	RestyRoot     = "/usr/local/openresty/nginx/"
+	RestyCmd      = RestyRoot + "sbin/"
+	RestyCmdFile  = RestyCmd + "nginx"
+	RestyConf     = RestyRoot + "conf/"
+	RestyConfFile = RestyConf + "nginx.conf"
+	RestyConfD    = RestyConf + "conf.d/"
+
 	MaxInt64Str = "9223372036854775807"
 )

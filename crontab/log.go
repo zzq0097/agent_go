@@ -44,15 +44,14 @@ func readLog() {
 		fmt.Println(err)
 		return
 	}
-	if dao.InsertSectionLog(string(marshal)) < 1 {
-		fmt.Println("ngx_log insert 0")
-	}
+	jsonStr := string(marshal)
+	i := dao.InsertSectionLog(jsonStr)
+	fmt.Println("insert:", i, ":", jsonStr)
 }
 
 func ngxStatus() {
 	url := "http://localhost:10110/ngx_status"
-	client := http.Client{Timeout: 1000}
-	if resp, err := client.Get(url); err != nil {
+	if resp, err := http.Get(url); err != nil {
 		fmt.Println(err)
 	} else if resp.StatusCode == http.StatusOK {
 		if all, err := ioutil.ReadAll(resp.Body); err != nil {
@@ -71,9 +70,9 @@ func ngxStatus() {
 				fmt.Println(err)
 				return
 			}
-			if dao.InsertNgxStatus(connections, requests) < 1 {
-				fmt.Println("ngx_status insert 0")
-			}
+			i := dao.InsertNgxStatus(connections, requests)
+			fmt.Println("insert:", i, ":", connections, requests)
+
 		}
 	}
 }
