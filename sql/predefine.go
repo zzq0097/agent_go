@@ -10,7 +10,7 @@ const (
 
 	CreateNgxStatusTable = `
 	CREATE TABLE IF NOT EXISTS ngx_status (
-		time text,
+		time datetime,
 		connections int,
 		requests int
 	)
@@ -18,7 +18,7 @@ const (
 
 	CreateNgxLogTable = `
 	CREATE TABLE IF NOT EXISTS ngx_log (
-		time text,
+		time datetime,
 		json text
 	)
 	`
